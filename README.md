@@ -1,30 +1,17 @@
-## Example Summary
+# MSPM0 FatFS
 
-Empty project using DriverLib.
-This example shows a basic empty project using DriverLib with just main file
-and SysConfig initialization.
+An attempt to make a general implementation of FatFS for the MSPM0. Very much a work in progress and not functional as of now. For more information please visit [my website](https://jerc-alaska.com/blog/msp-m0_fatfs/)
 
-## Peripherals, Pin Functions, MCU Pins, Launchpad Pins
-| Peripheral | Function | Pin | Launchpad Pin |
-| --- | --- | --- | --- |
-| BOARD | Debug Clock | PA20 | J19_16 |
-| BOARD | Debug Data In Out | PA19 | J19_14 |
+## Pinout in my main.c example
+|Function|MSPM0G3519 Port/Pin|
+|---|---|
+|POCI (Peripheral Out, Controller In)|PB7 (Pin 41)|
+|PICO (Peripheral In, Controller Out)|PB8 (Pin 42)|
+|SCLK (Serial Clock)|PB31 (Pin 32)|
+|CS (Chip Select)|PB12 (Pin 46)|
+*Please note that the use of PICO and POCI is standard in MSPM0 TI documentation, and will be reflected in this post.
 
-### Device Migration Recommendations
-This project was developed for a superset device included in the MSPM0 LaunchPad. Please
-visit the [CCS User's Guide](https://software-dl.ti.com/msp430/esd/MSPM0-SDK/latest/docs/english/tools/ccs_ide_guide/doc_guide/doc_guide-srcs/ccs_ide_guide.html#sysconfig-project-migration)
-for information about migrating to other MSPM0 devices.
+## License
+Works not explicitly covered by another license are covered by the MIT copyright license. For more information, see the LICENSE file.
 
-### Low-Power Recommendations
-TI recommends to terminate unused pins by setting the corresponding functions to
-GPIO and configure the pins to output low or input with internal
-pullup/pulldown resistor.
 
-SysConfig allows developers to easily configure unused pins by selecting **Board**→**Configure Unused Pins**.
-
-For more information about jumper configuration to achieve low-power using the
-MSPM0 LaunchPad, please visit the LP-MSPM0G3519 User's Guide.
-
-## Example Usage
-
-Compile, load and run the example.
