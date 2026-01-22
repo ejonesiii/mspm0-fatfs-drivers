@@ -9,6 +9,7 @@ An attempt to make a general implementation of FatFS for the MSPM0. Very much a 
 |PICO (Peripheral In, Controller Out)|PB8 (Pin 42)|
 |SCLK (Serial Clock)|PB31 (Pin 32)|
 |CS (Chip Select)|PB12 (Pin 46)|
+
 *Please note that the use of PICO and POCI is standard in MSPM0 TI documentation, and will be reflected in this post.
 
 ## License
