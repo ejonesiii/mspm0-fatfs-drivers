@@ -30,6 +30,11 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * This code is an example of using the modified FatFS library on the MSPM0.
+ * The code was generated from the empty project found on the MSPM0-SDK within CCS v12
+ */
+
 #include <ti/driverlib/m0p/dl_interrupt.h>
 #include "ti_msp_dl_config.h"
 #include "ti/driverlib/driverlib.h"
