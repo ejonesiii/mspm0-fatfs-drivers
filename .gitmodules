@@ -1,3 +1,0 @@
-[submodule "fatfs"]
-	path = fatfs
-	url = git@github.com:abbrev/fatfs.git

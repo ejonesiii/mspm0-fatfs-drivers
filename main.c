@@ -33,11 +33,11 @@
 #include <ti/driverlib/m0p/dl_interrupt.h>
 #include "ti_msp_dl_config.h"
 #include "ti/driverlib/driverlib.h"
+#include "fatfs/source/ff.h"
 
 int main(void)
 {
     SYSCFG_DL_init();
-
     while (1) {
     }
 }
