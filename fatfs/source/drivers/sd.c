@@ -19,20 +19,35 @@
 #include "fatfs/source/drivers/sd.h"
 #include "fatfs/source/drivers/spi_wrapper.h"
 
+/* Misc Functions */
+/*
+ * Delays the clock by specified number of ms
+ *
+ * ms: milliseconds to delay
+ */
+void delay_ms(unsigned int ms){
+    unsigned int freq;
+    freq = (unsigned int)DL_SYSCTL_getCurrentSYSOSCFreq();
+    delay_cycles(freq/(1000*ms));
+}
+
+
+/* Main Functions */
+
 /*
  * Initializes the SD card and returns the SD card status
+ *
+ * pdrv: Selects which drive to be used (Currently only supports single drive mode, so it will always be 0)
  */
 DSTATUS disk_initialize (BYTE pdrv){
     // Only supports drive 0 (Single drive mode), so throw error if anything but 0
     if(pdrv!=0){
         return STA_NOINIT;
     }
-    //TODO ENABLE SPI INTERFACE AND PULL CS HIGH
-
-    //TODO DELAY 10 ms TO ALLOW SYSTEM TO SETTLE
-
-    //TODO SET CLOCK TO SLOW MODE (100 kHz to 400 kHz)
-
+    //Enable SPI interface
+    spi_init();
+    //Delay 10 ms to allow system to settle
+    delay_ms(10);
     //TODO SEND 0xFF 10 TIMES TOTAL TO INIT THE SD CARD
 
     //TODO DETERMINE CARD TYPE (SDv2, SDv1, or MMC)

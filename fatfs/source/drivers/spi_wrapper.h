@@ -16,6 +16,6 @@
 #ifndef FATFS_SOURCE_DRIVERS_SPI_WRAPPER_H_
 #define FATFS_SOURCE_DRIVERS_SPI_WRAPPER_H_
 
-int spi_init(char CS, char spi_phy);
+int spi_init(void);
 
 #endif /* FATFS_SOURCE_DRIVERS_SPI_WRAPPER_H_ */

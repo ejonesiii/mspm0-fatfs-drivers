@@ -18,56 +18,29 @@
 
 // Create a configuration struct to be referenced by the functions
 DL_SPI_Config SPI_SD;
+DL_SPI_ClockConfig SPI_SD_CLK;
 
 /*
- * Set the clock speed of the SPI Interface
+ * Set the clock speed of the SPI Interface to slow mode
  */
-int spi_set_clk(int clk){
+int spi_set_clk(unsigned int clk){
 
 }
 
 /*
  * Initialize the SPI interface
  */
-int spi_init(char CS,char spi_phy){
+int spi_init(void){
     // Initialize the configuration struct
     SPI_SD.bitOrder = DL_SPI_BIT_ORDER_MSB_FIRST;               // SD uses MSB first
     SPI_SD.dataSize = DL_SPI_DATA_SIZE_8;                       // 8-bit/1-byte transmissions
     SPI_SD.frameFormat = DL_SPI_FRAME_FORMAT_MOTO4_POL0_PHA0;   // SD uses the motorola frame format with phase and polarity set to 0
     SPI_SD.mode = DL_SPI_MODE_CONTROLLER;                       // Set to controller
     SPI_SD.parity = DL_SPI_PARITY_NONE;                         // No parity bits
-    switch(CS){                                                 // Select which CS pin to use
-    case 0:
-        SPI_SD.chipSelectPin = DL_SPI_CHIP_SELECT_0;
-        break;
-    case 1:
-        SPI_SD.chipSelectPin = DL_SPI_CHIP_SELECT_1;
-        break;
-    case 2:
-        SPI_SD.chipSelectPin = DL_SPI_CHIP_SELECT_2;
-        break;
-    case 3:
-        SPI_SD.chipSelectPin = DL_SPI_CHIP_SELECT_3;
-        break;
-    default:
-        return -1;
-    }
+    SPI_SD.chipSelectPin = SD_SPI_CS;                           // CS pin select (Configured in sd.h)
 
-
-
-    switch(spi_phy){                                            // Select which PHY to program
-    case 0:
-
-        break;
-    case 1:
-
-        break;
-    case 2:
-
-        break;
-    default:
-        return -1;
-    }
+    // Initialize SPI clock in slow clock mode
+    spi_set_clk(SD_SLOW_SPEED);
     return 0;
 }
 
