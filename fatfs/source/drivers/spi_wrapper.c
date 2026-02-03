@@ -22,9 +22,25 @@ DL_SPI_ClockConfig SPI_SD_CLK;
 
 /*
  * Set the clock speed of the SPI Interface to slow mode
+ * baud: The desired baud rate
  */
-int spi_set_clk(unsigned int clk){
+int spi_set_baud(unsigned int baud){
+    unsigned int freq, div;
+    freq = (unsigned int)DL_SYSCTL_getCurrentSYSOSCFreq();      // Retrieve the system clock frequency
+    div = (freq/(2*baud))-1;                                    // Calculate the division ratio for the clock divider
+    DL_SPI_setBitRateSerialClockDivider(SD_SPI_PHY, div);       // Set baud rate using divider
+    return 0;
+}
 
+/*
+ * Initialize the SPI clock
+ * baud: The desired baud rate
+ */
+int spi_init_clk(unsigned int baud){
+    SPI_SD_CLK.clockSel = DL_SPI_CLOCK_BUSCLK;                  // Set clock to the BUSCLK for maximum clock rate
+    SPI_SD_CLK.divideRatio = DL_SPI_CLOCK_DIVIDE_RATIO_1;       // No clock division
+    DL_SPI_setClockConfig(SD_SPI_PHY,&SPI_SD_CLK);              // Config the clock
+    return spi_set_baud(baud);                                  // Set the baud rate of the clock
 }
 
 /*
@@ -40,9 +56,19 @@ int spi_init(void){
     SPI_SD.chipSelectPin = SD_SPI_CS;                           // CS pin select (Configured in sd.h)
 
     // Initialize SPI clock in slow clock mode
-    spi_set_clk(SD_SLOW_SPEED);
+    spi_init_clk(SD_SLOW_SPEED);
+
+    // Initialize the actual interface
+    DL_SPI_init(SD_SPI_PHY,&SPI_SD);
+
+    // Set up the interrupt
+    DL_SPI_setFIFOThreshold(SD_SPI_PHY, DL_SPI_RX_FIFO_LEVEL_1_2_FULL, DL_SPI_TX_FIFO_LEVEL_1_2_EMPTY);
+
+    // Enable the interface
+    DL_SPI_enable(SD_SPI_PHY);
     return 0;
 }
+
 
 
 

@@ -16,6 +16,8 @@
 #ifndef FATFS_SOURCE_DRIVERS_SPI_WRAPPER_H_
 #define FATFS_SOURCE_DRIVERS_SPI_WRAPPER_H_
 
+int spi_set_baud(unsigned int baud);
+int spi_init_clk(unsigned int baud);
 int spi_init(void);
 
 #endif /* FATFS_SOURCE_DRIVERS_SPI_WRAPPER_H_ */

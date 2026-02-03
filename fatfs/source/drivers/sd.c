@@ -12,7 +12,7 @@
  * Written using Code Composer Studio v12.
  * No AI was used in the creation of this code.
  */
-
+#include <stdint.h>
 #include "fatfs/source/diskio.h"
 #include "fatfs/source/ff.h"
 #include "ti/driverlib/driverlib.h"
@@ -22,7 +22,6 @@
 /* Misc Functions */
 /*
  * Delays the clock by specified number of ms
- *
  * ms: milliseconds to delay
  */
 void delay_ms(unsigned int ms){
@@ -36,19 +35,22 @@ void delay_ms(unsigned int ms){
 
 /*
  * Initializes the SD card and returns the SD card status
- *
- * pdrv: Selects which drive to be used (Currently only supports single drive mode, so it will always be 0)
+ * pdrv: Selects which drive to be used (Currently only supports single drive mode, so it should always be 0)
  */
 DSTATUS disk_initialize (BYTE pdrv){
+    uint8_t init_seq[10] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
     // Only supports drive 0 (Single drive mode), so throw error if anything but 0
     if(pdrv!=0){
         return STA_NOINIT;
     }
     //Enable SPI interface
     spi_init();
+
     //Delay 10 ms to allow system to settle
     delay_ms(10);
-    //TODO SEND 0xFF 10 TIMES TOTAL TO INIT THE SD CARD
+
+    //Send 0xFF 10 times total to init the SD card
+    DL_SPI_fillTXFIFO8(SD_SPI_PHY,&init_seq[0],10);
 
     //TODO DETERMINE CARD TYPE (SDv2, SDv1, or MMC)
 
