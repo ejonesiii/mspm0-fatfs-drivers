@@ -19,6 +19,10 @@
 #include "fatfs/source/drivers/sd.h"
 #include "fatfs/source/drivers/spi_wrapper.h"
 
+/* Defines */
+#define DEV_MMC     0                                                   // Map MMC/SD card to physical drive 0
+
+
 /* Misc Functions */
 /*
  * Delays the clock by specified number of ms
@@ -38,21 +42,25 @@ void delay_ms(unsigned int ms){
  * pdrv: Selects which drive to be used (Currently only supports single drive mode, so it should always be 0)
  */
 DSTATUS disk_initialize (BYTE pdrv){
-    uint8_t init_seq[10] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+    char i;
     // Only supports drive 0 (Single drive mode), so throw error if anything but 0
     if(pdrv!=0){
         return STA_NOINIT;
     }
-    //Enable SPI interface
+    // Enable SPI interface
     spi_init();
 
-    //Delay 10 ms to allow system to settle
+    // Delay 10 ms to allow system to settle
     delay_ms(10);
 
-    //Send 0xFF 10 times total to init the SD card
-    DL_SPI_fillTXFIFO8(SD_SPI_PHY,&init_seq[0],10);
+    // Send 0xFF 10 times total to init the SD card
+    DL_SPI_setRepeatTransmit(SD_SPI_PHY,9);                         // Set SPI to transmit 10 times
+    DL_SPI_transmitDataBlocking8(SD_SPI_PHY,0xFF);                  // Send 0xFF to SPI buffer
+    DL_SPI_setRepeatTransmit(SD_SPI_PHY,0);                         // Disable repeat transmit
 
-    //TODO DETERMINE CARD TYPE (SDv2, SDv1, or MMC)
+    //TODO Determine card type (SDv2, SDv1, or MMC)
+    DL_SPI_transmitDataBlocking8(SD_SPI_PHY,CMD0);
+
 
     //TODO REPORT BACK CARD TYPE IF CONNECTION SUCCESSFUL AND CHANGE TO HIGH SPEED MODE (8 MHz to 25 MHz)
 

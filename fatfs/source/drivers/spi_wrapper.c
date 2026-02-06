@@ -47,6 +47,9 @@ int spi_init_clk(unsigned int baud){
  * Initialize the SPI interface
  */
 int spi_init(void){
+    // Turn on SPI interface
+    DL_SPI_enablePower(SD_SPI_PHY);
+
     // Initialize the configuration struct
     SPI_SD.bitOrder = DL_SPI_BIT_ORDER_MSB_FIRST;               // SD uses MSB first
     SPI_SD.dataSize = DL_SPI_DATA_SIZE_8;                       // 8-bit/1-byte transmissions
@@ -69,6 +72,34 @@ int spi_init(void){
     return 0;
 }
 
+int spi_dma_tx(){
+    //TODO: Init DMA process
 
+    //TODO: Point to data being transmitted
+
+    //TODO: Reset DMA when done
+}
+
+int spi_dma_rx(){
+
+}
+
+int spi_tx_block(){
+    //TODO: Add command information to be transmitted to SD card
+
+    //TODO: Call SPI DMA Tx function
+
+    //TODO: Error handling?
+    return 0;
+}
+
+int spi_rx_block(){
+    //TODO: Add command information to be transmitted to SD card
+
+    //TODO: Call SPI DMA Rx function
+
+    //TODO: Error handling?
+    return 0;
+}
 
 
