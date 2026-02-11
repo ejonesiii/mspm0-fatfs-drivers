@@ -21,7 +21,7 @@
 /* Clock Settings */
 #define SD_SLOW_SPEED   400000                  // Slow mode SPI clock speed. Used during card init. (Should be between 100 kHz and 400 kHz)
 #define SD_FAST_SPEED   8000000                 // Fast mode SPI clock speed. Used during data transfer. (Should be between 1 MHz and 25 MHz, though the MSPM0 is limited to 16 MHz without the PLL)
-//#define SD_CLK_SOURCE                           //TODO ACTUALLY ALLOW FOR DIFFERENT CLOCKS (CURRENTLY ONLY SUPPORTS SYSCLK WHICH LIMITS BAUD TO 16 MHz)
+//#define SD_CLK_SOURCE                           //TODO ACTUALLY ALLOW FOR DIFFERENT CLOCKS (CURRENTLY ONLY SUPPORTS SYSCLK WHICH LIMITS BAUD TO 16 Mbps)
 
 /* SPI Pinout Settings */
 #define SD_SPI_PHY      SPI1                    // Selects which SPI PHY interface is used (0 to 2 on G3519)

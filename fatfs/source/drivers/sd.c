@@ -34,6 +34,43 @@ void delay_ms(unsigned int ms){
     delay_cycles(freq/(1000*ms));
 }
 
+/*
+ * Send a command to the SD Card
+ * cmd: The command to be sent
+ * arg: Any arguments to be sent with the command
+ */
+static BYTE send_cmd(BYTE cmd, DWORD arg){
+    BYTE crc, res, n;                                               // CRC, result, and number of loop variables
+
+    // Check to see if command is SDC specific
+    if (cmd & 0x80) {                                               // If command is ACMDx (SDC command), send CMD55 first with no arg
+        cmd &= 0x7F;                                                // Flip Bit 7 to be zero
+        res = send_cmd(CMD55, 0);                                   // Send CMD55
+        if (res > 1) return res;                                    // If return is not 0 or 1, break and return error
+    }
+
+    // Send command
+    DL_SPI_transmitDataBlocking8(SD_SPI_PHY,(uint8_t)cmd);          // Send command first
+    DL_SPI_transmitDataBlocking32(SD_SPI_PHY,(uint32_t)arg);        // Transmit argument second
+    crc = 0x01;                                                     // CRC-16 isn't checked in SPI mode, so send dummy in most cases
+    if (cmd == CMD0) crc = 0x95;                                    // Valid CRC for CMD0(0)
+    if (cmd == CMD8) crc = 0x87;                                    // Valid CRC for CMD8(0x1AA)
+    DL_SPI_transmitDataBlocking8(SD_SPI_PHY,(uint8_t)crc);          // Transmit CRC
+
+    // Wait for response
+    if(cmd==CMD12){                                                 // If CMD12, simply discard first byte
+        DL_SPI_transmitDataBlocking8(SD_SPI_PHY,0xFF);              // Send 0xFF to SPI buffer (Keep POCI HIGH)
+        DL_SPI_receiveDataBlocking8(SD_SPI_PHY);                    // Receive byte
+    }
+    n = 10;
+    do{                                                             // Wait 10 bytes for a response
+        DL_SPI_transmitDataBlocking8(SD_SPI_PHY,0xFF);              // Send 0xFF to SPI buffer (Keep POCI HIGH)
+        res = (BYTE)DL_SPI_receiveDataBlocking8(SD_SPI_PHY);        // Receive byte
+    }
+    while((res&0x80)&&--n);                                         // Check to see if byte is valid (Will start with 0b0xxx xxxx)
+    return res;
+}
+
 
 /* Main Functions */
 
@@ -60,7 +97,9 @@ DSTATUS disk_initialize (BYTE pdrv){
 
     //TODO Determine card type (SDv2, SDv1, or MMC)
     DL_SPI_transmitDataBlocking8(SD_SPI_PHY,CMD0);
+    if(DL_SPI_receiveDataBlocking8(SD_SPI_PHY)==1){
 
+    }
 
     //TODO REPORT BACK CARD TYPE IF CONNECTION SUCCESSFUL AND CHANGE TO HIGH SPEED MODE (8 MHz to 25 MHz)
 
